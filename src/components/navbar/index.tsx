@@ -1,7 +1,12 @@
 export default function Navbar(){
     return (
         <div>
-            <h1>Navbar</h1>
+            <ul>
+                <li> Logo </li>
+                <li> Home </li>
+                <li> Gallery </li>
+                <li> About </li>
+            </ul>
         </div>
     )
 }
