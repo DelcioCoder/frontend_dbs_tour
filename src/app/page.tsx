@@ -1,101 +1,141 @@
 import Image from "next/image";
 
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+export default async function Home() {
+  const RESTAURANTS_API_URL = "http://localhost:8000/api/restaurants/";
+  const IMAGES_API_URL = "http://localhost:8000/api/images/";
+  const token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MTUzNDEwLCJpYXQiOjE3Mzc4OTQxOTQsImp0aSI6IjBhNWZiZTljZDgzNTRhOTFiMmM2NzQ0NzA1ZTllN2FlIiwidXNlcl9pZCI6MX0.gh7aRF8apJTn2O4LUTNTOgyQoEw2_eSD61ZEPKEInTo";
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+  try {
+    // Fetch restaurantes
+    const restaurantsRes = await fetch(RESTAURANTS_API_URL, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      cache: "no-store",
+    });
+
+    if (!restaurantsRes.ok) {
+      throw new Error("Falha ao carregar restaurantes");
+    }
+
+    const restaurantsData = await restaurantsRes.json();
+
+    // Fetch imagens
+    const imagesRes = await fetch(IMAGES_API_URL, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      cache: "no-store",
+    });
+
+    if (!imagesRes.ok) {
+      throw new Error("Falha ao carregar imagens");
+    }
+
+    const imagesData = await imagesRes.json();
+
+    // Relacionar imagens com os restaurantes
+    const restaurantsWithImages = restaurantsData.results.map((restaurant) => {
+      const images = imagesData.results.filter(
+        (image) => image.object_id === restaurant.id
+      );
+      return { ...restaurant, images };
+    });
+
+    return (
+      <div>
+        {/* Background */}
+        <div className="relative h-screen w-full">
+          <div className="absolute inset-0">
             <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+              src="/luanda.png"
+              alt="Background image"
+              fill
+              objectFit="cover"
+              quality={100}
+              priority
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          </div>
+          <div className="absolute inset-0 bg-black/50"></div>
+          <div className="relative flex h-full items-center justify-center text-center">
+            <div className="text-white">
+              <h1 className="text-4xl md:text-6xl font-bold drop-shadow-lg">
+                Explore os Melhores Locais do Município de Belas
+              </h1>
+              <p className="mt-4 text-lg md:text-xl drop-shadow-lg">
+                Descubra restaurantes, hotéis e muito mais com um clique.
+              </p>
+              <button className="mt-6 px-6 py-3 bg-yellow-500 text-black font-medium rounded-xl hover:bg-yellow-600 shadow-lg">
+                Comece Agora
+              </button>
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+
+        {/* Lista de Restaurantes */}
+        <div className="flex flex-wrap justify-center bg-gray-100 py-10">
+          {restaurantsWithImages.slice(0, 4).map((restaurant) => (
+            <div
+              key={restaurant.id}
+              className="w-80 bg-white rounded-lg shadow-md m-4 overflow-hidden transform hover:scale-105 transition-transform"
+            >
+              {/* Imagem */}
+              {restaurant.images.length > 0 ? (
+                <Image
+                  src={restaurant.images[0].image}
+                  alt={
+                    restaurant.images[0].description || "Imagem do restaurante"
+                  }
+                  width={350}
+                  height={200}
+                  className="object-cover w-full h-48"
+                />
+              ) : (
+                <div className="flex items-center justify-center w-full h-48 bg-gray-300 text-gray-700">
+                  Imagem não disponível
+                </div>
+              )}
+
+              {/* Conteúdo */}
+              <div className="p-4">
+                <h2 className="text-lg font-bold text-gray-800">
+                  {restaurant.name}
+                </h2>
+                <p className="text-sm text-gray-600">
+                  {restaurant.description || "Descrição não disponível"}
+                </p>
+                <div className="mt-4 flex gap-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <span
+                      key={star}
+                      className={`text-2xl ${
+                        restaurant.rating >= star
+                          ? "text-yellow-500"
+                          : "text-gray-300"
+                      }`}
+                    >
+                      ⭐
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  } catch (error) {
+    console.error(error);
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p className="text-xl text-red-500">
+          Ocorreu um erro ao carregar os dados. Por favor, tente novamente mais
+          tarde.
+        </p>
+      </div>
+    );
+  }
 }
