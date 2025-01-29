@@ -1,20 +1,20 @@
+import { API_URL } from "@/services";
+import { ImageType, RestaurantType } from "@/types";
 import Image from "next/image";
 
 export default async function Home() {
-  const RESTAURANTS_API_URL = "http://localhost:8000/api/restaurants/";
-  const IMAGES_API_URL = "http://localhost:8000/api/images/";
   const token =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MTUzNDEwLCJpYXQiOjE3Mzc4OTQxOTQsImp0aSI6IjBhNWZiZTljZDgzNTRhOTFiMmM2NzQ0NzA1ZTllN2FlIiwidXNlcl9pZCI6MX0.gh7aRF8apJTn2O4LUTNTOgyQoEw2_eSD61ZEPKEInTo";
 
   try {
     // Fetch restaurantes
-    const restaurantsRes = await fetch(RESTAURANTS_API_URL, {
+    const restaurantsRes = await fetch(`${API_URL}/restaurants/`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
       cache: "no-store",
-    });
+    })
 
     if (!restaurantsRes.ok) {
       throw new Error("Falha ao carregar restaurantes");
@@ -23,7 +23,7 @@ export default async function Home() {
     const restaurantsData = await restaurantsRes.json();
 
     // Fetch imagens
-    const imagesRes = await fetch(IMAGES_API_URL, {
+    const imagesRes = await fetch(`${API_URL}/images/`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -38,9 +38,9 @@ export default async function Home() {
     const imagesData = await imagesRes.json();
 
     // Relacionar imagens com os restaurantes
-    const restaurantsWithImages = restaurantsData.results.map((restaurant) => {
-      const images = imagesData.results.filter(
-        (image) => image.object_id === restaurant.id
+    const restaurantsWithImages = restaurantsData.results.map((restaurant: RestaurantType) => {
+      const images = imagesData.results.filter((image: ImageType) => 
+        image.object_id === restaurant.id
       );
       return { ...restaurant, images };
     });
@@ -77,17 +77,17 @@ export default async function Home() {
 
         {/* Lista de Restaurantes */}
         <div className="flex flex-wrap justify-center bg-gray-100 py-10">
-          {restaurantsWithImages.slice(0, 4).map((restaurant) => (
+          {restaurantsWithImages.slice(0, 4).map((restaurant: RestaurantType) => (
             <div
               key={restaurant.id}
               className="w-80 bg-white rounded-lg shadow-md m-4 overflow-hidden transform hover:scale-105 transition-transform"
             >
               {/* Imagem */}
-              {restaurant.images.length > 0 ? (
+              {restaurant.image ? (
                 <Image
-                  src={restaurant.images[0].image}
+                  src={restaurant.image.image}
                   alt={
-                    restaurant.images[0].description || "Imagem do restaurante"
+                    restaurant.image.description || "Imagem do restaurante"
                   }
                   width={350}
                   height={200}

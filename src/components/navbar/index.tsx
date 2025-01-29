@@ -65,6 +65,13 @@ export default function Navbar() {
         >
           Contacto
         </Link>
+        <Link
+          href="/sign-in"
+          className="hover:text-yellow-300 transition-colors"
+          aria-label="Sign In"
+        >
+          Entrar
+        </Link>
       </div>
   
       {/* Mobile menu toggle */}
