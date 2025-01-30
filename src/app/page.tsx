@@ -1,4 +1,5 @@
 import { ImageType, RestaurantType } from "@/types";
+import { RestaurantSchema, ImageSchema } from "../../schemas";
 import Image from "next/image";
 import fetchData from "@/utils/fetchData";
 
@@ -22,9 +23,16 @@ export default async function Home() {
       fetchData("images/"),
     ]);
 
+    // Validar os dados dos restaurantes
+    const validateRestaurants = RestaurantSchema.array().parse(restaurantsData.results);
+
+
+    // Validar os dados das imagens
+    const validateImages = ImageSchema.array().parse(imagesData.results);
+
     // Relacionar imagens com os restaurantes
-    restaurantsWithImages = restaurantsData.results.map((restaurant: RestaurantType) => {
-      const images = imagesData.results.filter((image: ImageType) => image.object_id === restaurant.id);
+    restaurantsWithImages = validateRestaurants.map((restaurant: RestaurantType) => {
+      const images = validateImages.filter((image: ImageType) => image.object_id === restaurant.id);
       return { ...restaurant, images };
     });
 
