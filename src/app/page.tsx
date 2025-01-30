@@ -3,8 +3,8 @@ import { ImageType, RestaurantType } from "@/types";
 import Image from "next/image";
 
 export default async function Home() {
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MTUzNDEwLCJpYXQiOjE3Mzc4OTQxOTQsImp0aSI6IjBhNWZiZTljZDgzNTRhOTFiMmM2NzQ0NzA1ZTllN2FlIiwidXNlcl9pZCI6MX0.gh7aRF8apJTn2O4LUTNTOgyQoEw2_eSD61ZEPKEInTo";
+  // Obter token de autenticação
+  const token = process.env.NEXT_PUBLIC_API_TOKEN;
 
   try {
     // Fetch restaurantes
