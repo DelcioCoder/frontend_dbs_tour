@@ -1,49 +1,23 @@
-import { API_URL } from "@/services";
 import { ImageType, RestaurantType } from "@/types";
 import Image from "next/image";
+import fetchData from "@/utils/fetchData";
 
 export default async function Home() {
-  // Obter token de autenticação
-  const token = process.env.NEXT_PUBLIC_API_TOKEN;
+  const cloudinaryName = process.env.CLOUDINARY_CLOUD_NAME; // Cloudinary Cloud Name
 
   try {
-    // Fetch restaurantes
-    const restaurantsRes = await fetch(`${API_URL}/restaurants/`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      cache: "no-store",
-    })
-
-    if (!restaurantsRes.ok) {
-      throw new Error("Falha ao carregar restaurantes");
-    }
-
-    const restaurantsData = await restaurantsRes.json();
-
-    // Fetch imagens
-    const imagesRes = await fetch(`${API_URL}/images/`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      cache: "no-store",
-    });
-
-    if (!imagesRes.ok) {
-      throw new Error("Falha ao carregar imagens");
-    }
-
-    const imagesData = await imagesRes.json();
+    const restaurantsData = await fetchData("restaurants/");
+    const imagesData = await fetchData("images/");
 
     // Relacionar imagens com os restaurantes
-    const restaurantsWithImages = restaurantsData.results.map((restaurant: RestaurantType) => {
-      const images = imagesData.results.filter((image: ImageType) => 
-        image.object_id === restaurant.id
-      );
-      return { ...restaurant, images };
-    });
+    const restaurantsWithImages = restaurantsData.results.map(
+      (restaurant: RestaurantType) => {
+        const images = imagesData.results.filter(
+          (image: ImageType) => image.object_id === restaurant.id
+        );
+        return { ...restaurant, images };
+      }
+    );
 
     return (
       <div>
@@ -54,7 +28,7 @@ export default async function Home() {
               src="/luanda.png"
               alt="Background image"
               fill
-              objectFit="cover"
+              style={{ objectFit: "cover" }} // Atualizado para a nova forma de usar objectFit
               quality={100}
               priority
             />
@@ -83,15 +57,14 @@ export default async function Home() {
               className="w-80 bg-white rounded-lg shadow-md m-4 overflow-hidden transform hover:scale-105 transition-transform"
             >
               {/* Imagem */}
-              {restaurant.image ? (
+              {restaurant.images.length > 0 ? (
                 <Image
-                  src={restaurant.image.image}
-                  alt={
-                    restaurant.image.description || "Imagem do restaurante"
-                  }
+                  src={`https://res.cloudinary.com/${cloudinaryName}/${restaurant.images[0].image}`}
+                  alt={restaurant.images[0].description || "Imagem do restaurante"}
                   width={350}
                   height={200}
-                  className="object-cover w-full h-48"
+                  style={{ objectFit: "cover" }} // Atualizado para a nova forma de usar objectFit
+                  className="w-full h-48"
                 />
               ) : (
                 <div className="flex items-center justify-center w-full h-48 bg-gray-300 text-gray-700">
@@ -112,9 +85,7 @@ export default async function Home() {
                     <span
                       key={star}
                       className={`text-2xl ${
-                        restaurant.rating >= star
-                          ? "text-yellow-500"
-                          : "text-gray-300"
+                        restaurant.rating >= star ? "text-yellow-500" : "text-gray-300"
                       }`}
                     >
                       ⭐
@@ -132,8 +103,7 @@ export default async function Home() {
     return (
       <div className="flex items-center justify-center h-screen">
         <p className="text-xl text-red-500">
-          Ocorreu um erro ao carregar os dados. Por favor, tente novamente mais
-          tarde.
+          Ocorreu um erro ao carregar os dados. Por favor, tente novamente mais tarde.
         </p>
       </div>
     );
