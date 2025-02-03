@@ -1,8 +1,7 @@
-import { API_URL } from "@/services";
-
 export default async function fetchData(endpoint: string){
     const token = process.env.NEXT_PUBLIC_API_TOKEN;
-    const res = await fetch(`${API_URL}/${endpoint}`, {
+    const backend_domain = process.env.BACKEND_DOMAIN;
+    const res = await fetch(`${backend_domain}/${endpoint}`, {
         headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
