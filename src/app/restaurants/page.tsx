@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { RestaurantType, ImageType } from "@/types";
-import fetchData from "@/utils/fetchData";
+import fetchData from "@/services/fetchData";
 import { RestaurantSchema, ImageSchema } from "../../../schemas";
 
 export default async function RestaurantsPage() {

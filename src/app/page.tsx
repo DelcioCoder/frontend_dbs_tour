@@ -1,8 +1,7 @@
 import { ImageType, RestaurantType } from "@/types";
 import { RestaurantSchema, ImageSchema } from "../../schemas";
 import Image from "next/image";
-import fetchData from "@/utils/fetchData";
-
+import fetchData from "@/services/fetchData";
 export default async function Home() {
   const cloudinaryName = process.env.CLOUDINARY_CLOUD_NAME; // Nome da Cloudinary
 
