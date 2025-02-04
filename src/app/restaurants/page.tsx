@@ -4,7 +4,22 @@ import { RestaurantType, ImageType } from "@/types";
 import fetchData from "@/services/fetchData";
 import { RestaurantSchema, ImageSchema } from "../../../schemas";
 
-export default async function RestaurantsPage() {
+// Função auxiliar para extrair o número da página da URL retornada pela API
+function getPageNumberFromUrl(url: string | null) {
+  if (!url) return null;
+  const urlObj = new URL(url);
+  return urlObj.searchParams.get("page");
+}
+
+// Recebendo searchParams no componente (válido para o App Router do Next.js)
+export default async function RestaurantsPage({
+  searchParams,
+}: {
+  searchParams: { page?: string };
+}) {
+  // Define a página atual (padrão é 1)
+  const page = searchParams.page || "1";
+
   const cloudinaryName = process.env.CLOUDINARY_CLOUD_NAME; // Nome da Cloudinary
 
   if (!cloudinaryName) {
@@ -17,40 +32,43 @@ export default async function RestaurantsPage() {
   }
 
   let restaurantsWithImages: RestaurantType[] = [];
+  let restaurantsData: any; // Será usado para pegar os links de paginação
 
   try {
-    const [restaurantsData, imagesData, evaluationsData] = await Promise.all([
-      fetchData("restaurants/"),
+    // Buscando os dados, passando o parâmetro da página na URL da API
+    const [restaurantsResponse, imagesData, evaluationsData] = await Promise.all([
+      fetchData(`restaurants/?page=${page}`),
       fetchData("images/"),
       fetchData("evaluations/"), // Pegar avaliações
     ]);
 
+    restaurantsData = restaurantsResponse;
+
     // Validar os dados dos restaurantes
-    const validateRestaurants = RestaurantSchema.array().parse(restaurantsData.results);
+    const validateRestaurants = RestaurantSchema.array().parse(restaurantsResponse.results);
 
     // Validar os dados das imagens
     const validateImages = ImageSchema.array().parse(imagesData.results);
 
     const evaluations = evaluationsData.results;
 
-    // Relacionar imagens com os restaurantes
+    // Relacionar imagens e avaliações com os restaurantes
     restaurantsWithImages = validateRestaurants.map((restaurant: RestaurantType) => {
       const images = validateImages.filter((image: ImageType) => image.object_id === restaurant.id);
 
-
-      // Filtrar avaliações do restaurante
+      // Filtrar avaliações do restaurante e calcular a média
       const restaurantEvaluations = evaluations.filter(
         (evaluation: any) => evaluation.object_id === restaurant.id
       );
-
-      // Calcular a média das avaliações
-      const totalStars = restaurantEvaluations.reduce((sum: number, evalItem: any) => sum + evalItem.stars, 0);
-      const averageRating = restaurantEvaluations.length > 0 ? totalStars / restaurantEvaluations.length : 0;
+      const totalStars = restaurantEvaluations.reduce(
+        (sum: number, evalItem: any) => sum + evalItem.stars,
+        0
+      );
+      const averageRating =
+        restaurantEvaluations.length > 0 ? totalStars / restaurantEvaluations.length : 0;
 
       return { ...restaurant, images, averageRating };
     });
-
-
   } catch (error) {
     console.error("Erro ao carregar dados:", error);
     return (
@@ -62,6 +80,10 @@ export default async function RestaurantsPage() {
     );
   }
 
+  // Extrair números das páginas dos links retornados pela API
+  const nextPage = getPageNumberFromUrl(restaurantsData.next);
+  const currentPage = parseInt(page, 10);
+
   return (
     <div>
       {/* Lista de restaurantes */}
@@ -71,7 +93,6 @@ export default async function RestaurantsPage() {
           {restaurantsWithImages.map((restaurant) => (
             <div key={restaurant.id} className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full">
               <div className="relative h-48">
-                {/* Verifica se há ao menos uma imagem */}
                 {restaurant.images && restaurant.images.length > 0 ? (
                   <Image
                     src={`https://res.cloudinary.com/${cloudinaryName}/${restaurant.images[0].image}`}
@@ -81,7 +102,6 @@ export default async function RestaurantsPage() {
                     quality={100}
                   />
                 ) : (
-                  // Placeholder para quando não houver imagem
                   <div className="h-full w-full flex items-center justify-center bg-gray-200">
                     <span className="text-gray-500">Sem imagem</span>
                   </div>
@@ -92,7 +112,7 @@ export default async function RestaurantsPage() {
                 <p className="text-sm text-gray-600">{restaurant.description}</p>
               </div>
 
-              {/* Média real das avaliações */}
+              {/* Média das avaliações */}
               <div className="flex items-center gap-1" aria-label={`Avaliação média: ${restaurant.averageRating.toFixed(1)} estrelas`}>
                 {[1, 2, 3, 4, 5].map((star) => (
                   <span
@@ -117,26 +137,25 @@ export default async function RestaurantsPage() {
           ))}
         </div>
       </div>
+
+      ...
+
+      {/* Navegação de Paginação */}
+      <div className="container mx-auto px-4 py-4 flex justify-between">
+        {currentPage > 1 ? (
+          <Link href={`/restaurants?page=${currentPage - 1}`} className="px-4 py-2 bg-gray-200 rounded">
+            Anterior
+          </Link>
+        ) : (
+          <span />
+        )}
+        {nextPage ? (
+          <Link href={`/restaurants?page=${nextPage}`} className="px-4 py-2 bg-gray-200 rounded">
+            Próxima
+          </Link>
+        ) : null}
+      </div>
+
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
