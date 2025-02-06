@@ -1,4 +1,4 @@
-export type RestaurantType = {
+export type EstablishmentType = {
     id: number,
     name: string,
     description: string,
@@ -13,6 +13,10 @@ export type RestaurantType = {
     category: number,
     centrality: number
 }
+
+
+export type HotelType = EstablishmentType;
+export type RestaurantType = EstablishmentType
 
 export type ImageType = {
     object_id: number,
