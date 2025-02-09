@@ -6,12 +6,7 @@ import { RestaurantSchema, ImageSchema } from "../../../schemas";
 import { calculateAverageRating } from "@/utils/ratings";
 import { PaginatedResponse, Evaluation } from "@/types/api";
 import fetchData from "@/services/fetchData";
-
-function getPageNumberFromUrl(url: string | null) {
-  if (!url) return null;
-  const urlObj = new URL(url);
-  return urlObj.searchParams.get("page");
-}
+import { getPageNumberFromUrl } from "@/utils/getPage";
 
 export default async function RestaurantsPage({
   searchParams,
