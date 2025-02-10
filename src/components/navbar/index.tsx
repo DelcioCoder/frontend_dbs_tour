@@ -8,8 +8,8 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="bg-gray-900 text-white shadow-lg">
-    <nav className="container mx-auto flex items-center justify-between py-4 px-6">
+    <header className="bg-gray-900 text-white shadow-lg p-3 ">
+    <nav className="container mx-auto flex items-center justify-between space-x-3 py-4 px-6">
       {/* Logo */}
       <div className="text-2xl font-bold">
         <Link href="/" aria-label="Go to homepage">
@@ -36,7 +36,7 @@ export default function Navbar() {
       </div>
   
       {/* Links */}
-      <div className="hidden md:flex space-x-6 text-sm">
+      <div className="hidden md:flex justify-center items-center space-x-6 text-sm">
         <Link
           href="/"
           className="hover:text-yellow-300 transition-colors"
@@ -66,8 +66,8 @@ export default function Navbar() {
           Contacto
         </Link>
         <Link
-          href="/sign-in"
-          className="hover:text-yellow-300 transition-colors"
+          href="/auth/login"
+          className="py-2 px-3 rounded-md text-gray-900 bg-gray-100 border border-gray-100 hover:bg-gray-200 transition-colors"
           aria-label="Sign In"
         >
           Entrar
