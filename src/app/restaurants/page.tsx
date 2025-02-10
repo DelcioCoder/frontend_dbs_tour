@@ -5,7 +5,7 @@ import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { RestaurantSchema, ImageSchema } from "../../../schemas";
 import { calculateAverageRating } from "@/utils/ratings";
 import { PaginatedResponse, Evaluation } from "@/types/api";
-import fetchData from "@/services/fetchData";
+import fetchData from "@/utils/fetchData";
 import { getPageNumberFromUrl } from "@/utils/getPage";
 
 export default async function RestaurantsPage({
