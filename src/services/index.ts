@@ -1,1 +1,0 @@
-export const API_URL = 'https://backend-dbs-tour.onrender.com/api'

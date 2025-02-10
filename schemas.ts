@@ -17,5 +17,15 @@ export const RestaurantSchema = z.object({
 
 })
 
+
+
+export const HotelSchema = z.object({
+    id: z.number(),
+    name: z.string(),
+    description: z.string().nullable(),
+    rating: z.number().optional(),
+    images: z.array(ImageSchema).optional(), // Um hotel pode ter várias imagens
+})
+
 export type ImageType = z.infer<typeof ImageSchema>;
 export type RestaurantType = z.infer<typeof RestaurantSchema>;

@@ -4,6 +4,7 @@ import Image from "next/image";
 import fetchData from "@/utils/fetchData";
 import Head from "next/head";
 
+
 export default async function Home() {
   const cloudinaryName = process.env.CLOUDINARY_CLOUD_NAME; // Nome da Cloudinary
 
