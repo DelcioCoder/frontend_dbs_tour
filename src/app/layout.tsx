@@ -6,21 +6,16 @@ import { usePathname } from "next/navigation";
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   const pathname = usePathname();
-  console.log(pathname)
-  let isAuthPage = false
-  if (pathname === '/auth/login' || pathname === '/auth/register'){
-    isAuthPage = true
-  }
-  console.log(isAuthPage)
+
+  const isAuthPage = ["/auth/login", "/auth/register"].includes(pathname);
+
   return (
     <html lang="pt-pt">
-      <body className={`antialiased`}>
+      <body className="antialiased flex flex-col min-h-screen">
         {!isAuthPage && <Navbar />}
-        <div className=" min-h-[60vh]"> {children} </div>
+        <main className="flex-1">{children}</main>
         <Footer />
       </body>
     </html>
