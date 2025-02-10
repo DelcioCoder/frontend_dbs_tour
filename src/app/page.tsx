@@ -1,7 +1,10 @@
 import { ImageType, RestaurantType } from "@/types";
 import { RestaurantSchema, ImageSchema } from "../../schemas";
 import Image from "next/image";
-import fetchData from "@/services/fetchData";
+import fetchData from "@/utils/fetchData";
+import Head from "next/head";
+
+
 export default async function Home() {
   const cloudinaryName = process.env.CLOUDINARY_CLOUD_NAME; // Nome da Cloudinary
 
@@ -48,6 +51,12 @@ export default async function Home() {
 
   return (
     <div>
+      {/* Header meta-tags config */}
+      <Head>
+        <title key="DBS-TOUR" > DBS-TOUR </title>
+        <meta name="keywords" content="restaurante, hotéis, lazer, turismo, belas" ></meta>
+        <meta name="description" content="Encontre os melhores locais de lazer e turismo no município de belas" > </meta>
+      </Head>
       {/* Background */}
       <div className="relative h-screen w-full">
         <div className="absolute inset-0">
