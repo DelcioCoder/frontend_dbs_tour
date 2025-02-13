@@ -12,6 +12,7 @@ export const RestaurantSchema = z.object({
     id: z.number(),
     name: z.string(),
     description: z.string().nullable(),
+    opening_hours: z.string().nullable(),
     rating: z.number().optional(),
     images: z.array(ImageSchema).optional(), // Um restaurante pode ter várias imagens
 
