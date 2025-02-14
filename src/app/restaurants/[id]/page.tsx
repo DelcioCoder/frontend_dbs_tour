@@ -5,6 +5,7 @@ import { RestaurantType, ImageType} from "@/types";
 import { RestaurantSchema, ImageSchema } from "../../../../schemas";
 import { calculateAverageRating } from "@/utils/ratings";
 import { MapPin, Clock, Wallet, Utensils, Send } from "lucide-react";
+import { RatingBadge } from "@/components/Rating/RatingBadge";
 
 export default async function Page({
     params,
@@ -85,16 +86,10 @@ export default async function Page({
                         <h1 className="text-3xl font-bold text-gray-800 mb-4 md:mb-0">
                             {restaurantWithDetails.name}
                         </h1>
-                        <div className="flex items-center space-x-4 bg-gray-50 p-4 rounded-lg">
-                            <span className="text-2xl font-bold text-blue-600">
-                                {restaurantWithDetails.averageRating.toFixed(1)}
-                            </span>
-                            <div>
-                                <StarRating rating={restaurantWithDetails.averageRating} />
-                                <span className="text-sm text-gray-500">
-                                    ({restaurantWithDetails.evaluations.length} {restaurantWithDetails.evaluations.length > 1 ? ("avaliações"):("avaliação")})
-                                </span>
-                            </div>
+
+
+                        <div className="flex items-center space-x-3">
+                            <RatingBadge rating={restaurantWithDetails.averageRating} count={restaurantWithDetails.evaluations.length} />
                         </div>
                     </div>
 
