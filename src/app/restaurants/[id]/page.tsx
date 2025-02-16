@@ -4,8 +4,8 @@ import { RestaurantSchema, ImageSchema } from "../../../../schemas";
 import { calculateAverageRating } from "@/utils/ratings";
 import RestaurantHeader from "@/components/restaurantComponents/RestaurantHeader";
 import RestaurantInfo from "@/components/restaurantComponents/RestaurantInfo";
-import ReviewForm from "@/components/restaurantComponents/ReviewForm";
-import ReviewsList from "@/components/restaurantComponents/ReviewsList";
+import ReviewForm from "@/components/shared/ReviewForm";
+import ReviewsList from "@/components/shared/ReviewsList";
 export default async function Page({
     params,
 }: { params: { id: string } }) {

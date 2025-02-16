@@ -1,6 +1,6 @@
 import { RestaurantType, ImageType } from "@/types"
 import { Evaluation } from "@/types/api";
-import MainImage from "../MainImage";
+import MainImage from "../../shared/MainImage";
 
 interface RestaurantHeaderProps {
     restaurant: RestaurantType & {
