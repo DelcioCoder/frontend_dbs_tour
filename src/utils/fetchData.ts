@@ -1,7 +1,8 @@
 import { cookies } from "next/headers";
 import { refreshTokenAction } from "@/actions/auth";
 
-async function fetchData<T>(endpoint: string, options: RequestInit = { method: "GET" }): Promise<T> {
+
+async function fetchData<T>(endpoint: string, options: RequestInit = { method: "GET" }): Promise<T | null> {
   const backendDomain = process.env.BACKEND_DOMAIN;
   if (!backendDomain) {
     throw new Error("BACKEND_DOMAIN não está definido no .env");
@@ -19,20 +20,21 @@ async function fetchData<T>(endpoint: string, options: RequestInit = { method: "
     });
   };
 
-  // Aguardar os cookies antes de acessar o token
   const token = (await cookies()).get("access_token")?.value;
   let res = await fetchWithToken(token);
 
-  // Se o token expirou (401), tenta renovar
   if (res.status === 401) {
     const refreshResult = await refreshTokenAction();
     if (!refreshResult.success) {
       throw new Error(refreshResult.error || "Erro ao renovar a sessão");
     }
 
-    // Obtém o novo token após a renovação
     const newToken = (await cookies()).get("access_token")?.value;
-    res = await fetchWithToken(newToken); // Tenta novamente
+    res = await fetchWithToken(newToken);
+  }
+
+  if (res.status === 404) {
+    return null; // Retorna null em vez de lançar erro
   }
 
   if (!res.ok) {
