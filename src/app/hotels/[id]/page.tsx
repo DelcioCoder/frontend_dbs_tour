@@ -7,6 +7,7 @@ import HotelHeader from "@/components/hotelComponents/HotelHeader";
 import HotelInfo from "@/components/hotelComponents/HotelInfo";
 import ReviewForm from "@/components/shared/ReviewForm";
 import ReviewsList from "@/components/shared/ReviewsList";
+import { notFound } from "next/navigation";
 
 export default async function Page({
     params,
@@ -24,6 +25,10 @@ export default async function Page({
             fetchData<PaginatedResponse<ImageType>>(`images/`),
             fetchData<PaginatedResponse<Evaluation>>(`evaluations/`),
         ])
+
+        if(!hotelData) {
+            notFound();
+        }
 
         const validateHotel = HotelSchema.parse(hotelData);
         const validateImages = ImageSchema.array().parse(imagesData.results);

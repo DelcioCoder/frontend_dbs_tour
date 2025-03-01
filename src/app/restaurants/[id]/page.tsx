@@ -6,6 +6,8 @@ import RestaurantHeader from "@/components/restaurantComponents/RestaurantHeader
 import RestaurantInfo from "@/components/restaurantComponents/RestaurantInfo";
 import ReviewForm from "@/components/shared/ReviewForm";
 import ReviewsList from "@/components/shared/ReviewsList";
+import { notFound } from "next/navigation";
+
 export default async function Page({
     params,
 }: { params: { id: string } }) {
@@ -21,6 +23,10 @@ export default async function Page({
             fetchData<PaginatedResponse<ImageType>>(`images/`),
             fetchData<PaginatedResponse<Evaluation>>(`evaluations/`),
         ]);
+
+        if(!restaurantData) {
+            notFound();
+        }
 
         const validateRestaurant = RestaurantSchema.parse(restaurantData);
         const validateImages = ImageSchema.array().parse(imagesData.results);
