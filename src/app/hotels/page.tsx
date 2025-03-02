@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { HotelCard } from "@/components/HotelCard";
+import { HotelType, ImageType } from "@/types/index";
 import { Pagination } from "@/components/Pagination";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { HotelSchema, ImageSchema } from "../../../schemas";
@@ -27,37 +28,42 @@ export default async function HotelsPage({
     );
 }
 
-
-
 async function HotelsContent({
     page,
-    cloudinaryName,
+    cloudinaryName
 }: {
     page: string;
     cloudinaryName: string;
 }) {
+
     try {
         const [hotelsResponse, imagesData, evaluationsData] = await Promise.all([
-            fetchData<PaginatedResponse<HotelType>>(`hotels/?page=${page}`),
-            fetchData<PaginatedResponse<ImageType>>("images/"),
+            fetchData<PaginatedResponse<{ results: HotelType[] }>>(`hotels/?page=${page}`),
+            fetchData<PaginatedResponse<{ results: ImageType[] }>>("images/"),
             fetchData<PaginatedResponse<Evaluation>>("evaluations/"),
         ]);
+
+        if (!hotelsResponse || !imagesData || !evaluationsData) {
+            throw new Error("Erro ao carregar dados");
+        }
 
         const validateHotels = HotelSchema.array().parse(hotelsResponse.results);
         const validateImages = ImageSchema.array().parse(imagesData.results);
 
         const hotelsWithImages = validateHotels.map((hotel: HotelType) => {
             const images = validateImages.filter(
-                (image: ImageType) => image.object_id === hotel.id
+                (image: ImageType) => image.object_id === hotel.id && image.content_type === 10
             );
 
+
             const hotelEvaluations = evaluationsData.results.filter(
-                (evaluation: Evaluation) => evaluation.object_id === hotel.id
+                (evaluation: Evaluation) => evaluation.object_id === hotel.id && evaluation.content_type === 10
             );
+
 
             const averageRating = calculateAverageRating(hotelEvaluations);
 
-            return {...hotel, images, averageRating };
+            return { ...hotel, images, averageRating };
         });
 
         const nextPage = getPageNumberFromUrl(hotelsResponse.next);
@@ -68,7 +74,7 @@ async function HotelsContent({
                 <div className="container mx-auto px-4 py-8">
                     <h1 className="text-2xl font-bold text-gray-800 mb-6">Hotéis</h1>
 
-                    {hotelsWithImages.length === 0? (
+                    {hotelsWithImages.length === 0 ? (
                         <p className="text-gray-600 text-center py-8">
                             Nenhum hotel encontrado.
                         </p>
@@ -91,10 +97,9 @@ async function HotelsContent({
                     basePath="/hotels"
                 />
             </div>
-        )
+        );
     } catch (error) {
-        console.error("Error ao carregar os dados:", error);
+        console.error("Erro ao carregar dados:", error);
         throw error;
     }
 }
-
