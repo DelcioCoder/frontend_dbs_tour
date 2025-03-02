@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { RestaurantCard } from "@/components/RestaurantCard";
+import { RestaurantType, ImageType } from "@/types/index";
 import { Pagination } from "@/components/Pagination";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { RestaurantSchema, ImageSchema } from "../../../schemas";
@@ -7,6 +8,7 @@ import { calculateAverageRating } from "@/utils/ratings";
 import { PaginatedResponse, Evaluation } from "@/types/api";
 import fetchData from "@/utils/fetchData";
 import { getPageNumberFromUrl } from "@/utils/getPage";
+
 
 export default async function RestaurantsPage({
   searchParams,
@@ -34,13 +36,18 @@ async function RestaurantsContent({
   page: string; 
   cloudinaryName: string;
 }) {
+
   try {
     const [restaurantsResponse, imagesData, evaluationsData] = await Promise.all([
-      fetchData<PaginatedResponse<RestaurantType>>(`restaurants/?page=${page}`),
-      fetchData<PaginatedResponse<ImageType>>("images/"),
+      fetchData<PaginatedResponse<{ results: RestaurantType[]}>>(`restaurants/?page=${page}`),
+      fetchData<PaginatedResponse<{ results: ImageType[]}>>("images/"),
       fetchData<PaginatedResponse<Evaluation>>("evaluations/"),
     ]);
 
+    if (!restaurantsResponse || !imagesData || !evaluationsData) {
+      throw new Error("Erro ao carregar dados");
+    }
+    
     const validateRestaurants = RestaurantSchema.array().parse(restaurantsResponse.results);
     const validateImages = ImageSchema.array().parse(imagesData.results);
 

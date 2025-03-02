@@ -1,5 +1,6 @@
 import fetchData from "@/utils/fetchData";
 import { RestaurantType, ImageType } from "@/types";
+import { PaginatedResponse, Evaluation } from "@/types/api";
 import { RestaurantSchema, ImageSchema } from "../../../../schemas";
 import { calculateAverageRating } from "@/utils/ratings";
 import RestaurantHeader from "@/components/restaurantComponents/RestaurantHeader";
@@ -24,9 +25,11 @@ export default async function Page({
             fetchData<PaginatedResponse<Evaluation>>(`evaluations/`),
         ]);
 
-        if(!restaurantData) {
+        if (!restaurantData || !imagesData || !evaluationsData) {
             notFound();
         }
+
+       
 
         const validateRestaurant = RestaurantSchema.parse(restaurantData);
         const validateImages = ImageSchema.array().parse(imagesData.results);
@@ -57,7 +60,7 @@ export default async function Page({
 
                 {/* Restaurant Info Section */}
                 <RestaurantInfo restaurant={restaurantWithDetails} />
-                
+
 
                 {/* Reviews Section */}
                 <div className="bg-white rounded-lg shadow-lg p-6">
@@ -67,12 +70,12 @@ export default async function Page({
 
                     {/* Review Form */}
                     <ReviewForm />
-                    
+
 
 
                     {/* Reviews List */}
                     <ReviewsList evaluations={restaurantWithDetails.evaluations} />
-                   
+
                 </div>
             </div>
         );
