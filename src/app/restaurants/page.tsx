@@ -29,25 +29,25 @@ export default async function RestaurantsPage({
   );
 }
 
-async function RestaurantsContent({ 
-  page, 
-  cloudinaryName 
-}: { 
-  page: string; 
+async function RestaurantsContent({
+  page,
+  cloudinaryName
+}: {
+  page: string;
   cloudinaryName: string;
 }) {
 
   try {
     const [restaurantsResponse, imagesData, evaluationsData] = await Promise.all([
-      fetchData<PaginatedResponse<{ results: RestaurantType[]}>>(`restaurants/?page=${page}`),
-      fetchData<PaginatedResponse<{ results: ImageType[]}>>("images/"),
+      fetchData<PaginatedResponse<{ results: RestaurantType[] }>>(`restaurants/?page=${page}`),
+      fetchData<PaginatedResponse<{ results: ImageType[] }>>("images/"),
       fetchData<PaginatedResponse<Evaluation>>("evaluations/"),
     ]);
 
     if (!restaurantsResponse || !imagesData || !evaluationsData) {
       throw new Error("Erro ao carregar dados");
     }
-    
+
     const validateRestaurants = RestaurantSchema.array().parse(restaurantsResponse.results);
     const validateImages = ImageSchema.array().parse(imagesData.results);
 
@@ -55,11 +55,12 @@ async function RestaurantsContent({
       const images = validateImages.filter(
         (image: ImageType) => image.object_id === restaurant.id
       );
-      
+
       const restaurantEvaluations = evaluationsData.results.filter(
-        (evaluation: Evaluation) => evaluation.object_id === restaurant.id
+        (evaluation: Evaluation) => evaluation.object_id === restaurant.id && evaluation.content_type === 12
       );
-      
+
+
       const averageRating = calculateAverageRating(restaurantEvaluations);
 
       return { ...restaurant, images, averageRating };
@@ -72,7 +73,7 @@ async function RestaurantsContent({
       <div>
         <div className="container mx-auto px-4 py-8">
           <h1 className="text-2xl font-bold text-gray-800 mb-6">Restaurantes</h1>
-          
+
           {restaurantsWithImages.length === 0 ? (
             <p className="text-gray-600 text-center py-8">
               Nenhum restaurante encontrado.
