@@ -11,7 +11,7 @@ import { notFound } from "next/navigation";
 
 export default async function Page({
     params,
-}:{params: {id: string}}) {
+}: { params: { id: string } }) {
 
     const cloudinaryName = process.env.CLOUDINARY_CLOUD_NAME;
 
@@ -26,7 +26,7 @@ export default async function Page({
             fetchData<PaginatedResponse<Evaluation>>(`evaluations/`),
         ])
 
-        if(!hotelData) {
+        if (!hotelData || !imagesData || !evaluationsData) {
             notFound();
         }
 
@@ -43,7 +43,7 @@ export default async function Page({
 
 
         const averageRating = calculateAverageRating(hotelEvaluations);
-        
+
         const hotelWithDetails = {
             ...validateHotel,
             images: hotelImages,
@@ -52,27 +52,27 @@ export default async function Page({
         }
 
         return (
-        <div className="max-w-7xl mx-auto px-4 py-8">
-            {/* Header Section with Image and Map */}
-            <HotelHeader hotel={hotelWithDetails} cloudinaryName={cloudinaryName} />
+            <div className="max-w-7xl mx-auto px-4 py-8">
+                {/* Header Section with Image and Map */}
+                <HotelHeader hotel={hotelWithDetails} cloudinaryName={cloudinaryName} />
 
-            {/* Hotel Info Section */}
-            <HotelInfo hotel={hotelWithDetails} cloudinaryName={cloudinaryName} />  
+                {/* Hotel Info Section */}
+                <HotelInfo hotel={hotelWithDetails} cloudinaryName={cloudinaryName} />
 
-            {/* Reviews Section */}
-            <div className="bg-white rounded-lg shadow-lg p-6">
-                <h2 className="text-2xl font-bold text-gray-800 mb-6">
-                    Avaliações e Comentários
-                </h2>
+                {/* Reviews Section */}
+                <div className="bg-white rounded-lg shadow-lg p-6">
+                    <h2 className="text-2xl font-bold text-gray-800 mb-6">
+                        Avaliações e Comentários
+                    </h2>
 
-                {/* Review Form */}
-                <ReviewForm />
+                    {/* Review Form */}
+                    <ReviewForm />
 
-                {/* Reviews List */}
-                <ReviewsList evaluations={hotelWithDetails.evaluations} />
+                    {/* Reviews List */}
+                    <ReviewsList evaluations={hotelWithDetails.evaluations} />
+                </div>
             </div>
-        </div>
-    )
+        )
 
 
 
