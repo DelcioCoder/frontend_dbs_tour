@@ -4,7 +4,8 @@ export const ImageSchema = z.object({
     id: z.number(),
     object_id: z.number(),
     image: z.string(),
-    description: z.string().nullable(),
+    description: z.string().nullable().optional(),
+    content_type: z.number(),
 });
 
 
@@ -14,10 +15,11 @@ export const RestaurantSchema = z.object({
     description: z.string().nullable(),
     opening_hours: z.string().nullable(),
     rating: z.number().optional(),
-    images: z.array(ImageSchema).optional(), // Um restaurante pode ter várias imagens
-
-})
-
+    images: z.array(ImageSchema).optional(),
+    date_added: z.string(),
+    category: z.number(),
+    centrality: z.number(),
+  });
 
 
 export const HotelSchema = z.object({
@@ -26,6 +28,9 @@ export const HotelSchema = z.object({
     description: z.string().nullable(),
     rating: z.number().optional(),
     images: z.array(ImageSchema).optional(), // Um hotel pode ter várias imagens
+    date_added: z.string(),
+    category: z.number(),
+    centrality: z.number(),
 })
 
 export type ImageType = z.infer<typeof ImageSchema>;
