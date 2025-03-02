@@ -11,5 +11,14 @@ export interface Evaluation {
     id: number;
     object_id: number;
     stars: number;
+    date_added: string;
     comment?: string;
+    user : number;
+    content_type: number;
+}
+
+
+export interface User {
+    id: number;
+    username: string;
 }
