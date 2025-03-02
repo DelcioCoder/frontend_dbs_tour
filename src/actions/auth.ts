@@ -28,7 +28,7 @@ export async function loginAction(formData: FormData) {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // false em desenvolvimento
       sameSite: "strict",
-      maxAge: 24 * 60 * 60, // 24 horas
+      maxAge: 24 * 60 * 60, // 1 dia
       path: "/",
     });
 
@@ -36,7 +36,7 @@ export async function loginAction(formData: FormData) {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // false em desenvolvimento
       sameSite: "strict",
-      maxAge: 30 * 24 * 60 * 60, // 30 dias
+      maxAge: 7 * 24 * 60 * 60, // 7 dias
       path: "/",
     });
 
