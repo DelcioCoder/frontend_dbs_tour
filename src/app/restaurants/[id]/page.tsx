@@ -1,7 +1,7 @@
 import fetchData from "@/utils/fetchData";
 import { RestaurantType, ImageType } from "@/types";
-import { PaginatedResponse, Evaluation } from "@/types/api";
-import { RestaurantSchema, ImageSchema } from "../../../../schemas";
+import { PaginatedResponse, Evaluation, User } from "@/types/api";
+import { RestaurantSchema, ImageSchema, UserSchema } from "../../../../schemas";
 import { calculateAverageRating } from "@/utils/ratings";
 import RestaurantHeader from "@/components/restaurantComponents/RestaurantHeader";
 import RestaurantInfo from "@/components/restaurantComponents/RestaurantInfo";
@@ -19,33 +19,44 @@ export default async function Page({
     }
 
     try {
-        const [restaurantData, imagesData, evaluationsData] = await Promise.all([
+        const [restaurantData, imagesData, evaluationsData, usersData] = await Promise.all([
             fetchData<RestaurantType>(`restaurants/${params.id}`),
             fetchData<PaginatedResponse<ImageType>>(`images/`),
             fetchData<PaginatedResponse<Evaluation>>(`evaluations/`),
+            fetchData<PaginatedResponse<User>>(`users/`),
         ]);
 
-        if (!restaurantData || !imagesData || !evaluationsData) {
+        if (!restaurantData || !imagesData || !evaluationsData || !usersData) {
             notFound();
         }
-
        
 
         const validateRestaurant = RestaurantSchema.parse(restaurantData);
         const validateImages = ImageSchema.array().parse(imagesData.results);
+        const validateUsers = UserSchema.array().parse(usersData.results);
 
         const restaurantImages = validateImages.filter(
-            (image: ImageType) => image.object_id === validateRestaurant.id
+            (image: ImageType) => 
+            image.object_id === validateRestaurant.id && image.content_type === 12
         );
 
         const restaurantEvaluations = evaluationsData.results.filter(
-            (evaluation: Evaluation) => evaluation.object_id === validateRestaurant.id
+            (evaluation: Evaluation) => 
+            evaluation.object_id === validateRestaurant.id && evaluation.content_type === 12
         );
+
+        const evaluationUsers = validateUsers.filter(
+            (user: User) =>
+                restaurantEvaluations.some(
+                    (evaluation: Evaluation) => evaluation.user === user.id
+                )
+            )
 
         const averageRating = calculateAverageRating(restaurantEvaluations);
 
         const restaurantWithDetails = {
             ...validateRestaurant,
+            users: evaluationUsers,
             images: restaurantImages,
             averageRating,
             evaluations: restaurantEvaluations,
@@ -74,7 +85,7 @@ export default async function Page({
 
 
                     {/* Reviews List */}
-                    <ReviewsList evaluations={restaurantWithDetails.evaluations} />
+                    <ReviewsList evaluations={restaurantWithDetails.evaluations} users={restaurantWithDetails.users} />
 
                 </div>
             </div>
