@@ -4,6 +4,7 @@ import { cookies } from "next/headers"
 
 const authDomain = process.env.AUTH_DOMAIN;
 
+
 export async function loginAction(formData: FormData) {
   const username = formData.get("username");
   const password = formData.get("password");
@@ -24,7 +25,8 @@ export async function loginAction(formData: FormData) {
     const data = await response.json();
 
     // Definir tokens nos cookies
-    cookies().set("access_token", data.access, {
+    const cookieStore = await cookies();
+    cookieStore.set("access_token", data.access, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // false em desenvolvimento
       sameSite: "strict",
@@ -32,7 +34,7 @@ export async function loginAction(formData: FormData) {
       path: "/",
     });
 
-    cookies().set("refresh_token", data.refresh, {
+    cookieStore.set("refresh_token", data.refresh, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // false em desenvolvimento
       sameSite: "strict",
@@ -46,8 +48,59 @@ export async function loginAction(formData: FormData) {
   }
 }
 
+type RegisterData = {
+  username: string;
+  email: string;
+  password: string;
+  password2: string;
+};
+
+export async function registerAction(data: RegisterData) {
+  const { username, email, password, password2 } = data;
+
+  try {
+    const response = await fetch(`${authDomain}/auth/api/register/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username, email, password, password2 }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return { success: false, error: errorData };
+    }
+
+    const dataResponse = await response.json();
+    const cookieStore = await cookies();
+    cookieStore.set("access_token", dataResponse.access, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 24 * 60 * 60,
+      path: "/",
+    });
+
+    cookieStore.set("refresh_token", dataResponse.refresh, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60,
+      path: "/",
+    });
+
+    return { success: true };
+
+  } catch (error) {
+    return { success: false, error: "Erro ao conectar com o servidor" };
+  }
+}
+
+
 export async function refreshTokenAction() {
-  const refreshToken = (await cookies()).get('refresh_token')?.value;
+  const cookieStore = await cookies()
+  const refreshToken = cookieStore.get('refresh_token')?.value;
 
   if (!refreshToken) {
     return { success: false, error: 'Nenhum refresh token disponível' };
@@ -70,7 +123,7 @@ export async function refreshTokenAction() {
     const data = await response.json();
 
     // Atualizar o access token no cookie
-    (await cookies()).set('access_token', data.access, {
+    cookieStore.set('access_token', data.access, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: 'strict',
@@ -86,7 +139,9 @@ export async function refreshTokenAction() {
 
 
 export async function logoutAction() {
-  (await cookies()).delete("access_token");
-  (await cookies()).delete("refresh_token");
+  const cookieStore = await cookies()
+
+  cookieStore.delete("access_token");
+  cookieStore.delete("refresh_token");
   return { success: true };
 }
