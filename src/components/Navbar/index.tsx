@@ -11,7 +11,7 @@ import { LogIn } from "lucide-react";
 export default function Navbar({ isAuthenticated }: Readonly<{ isAuthenticated: boolean }>) {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
-  const isAuthPage = ["/auth/login", "auth/register"].includes(pathname);
+  const isAuthPage = ["/auth/login", "/auth/register"].includes(pathname);
 
   if (isAuthPage) {
     return null;
