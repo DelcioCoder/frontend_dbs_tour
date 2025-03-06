@@ -8,7 +8,7 @@ import GastronomyImage from "../../public/gasthronomic.jpg";
 import acommodationImage from "../../public/hospedagem.jpg";
 import cultureImage from "../../public/culture.jpg";
 import belasImage from "../../public/belas.jpg";
-
+import TokenExpiredPopup from "@/components/TokenExpired";
 // Definição  do novo tipo que inclui a propriedade images
 type RestaurantWithImages = RestaurantType & { images: ImageType[] };
 
@@ -54,8 +54,16 @@ export default async function Home() {
       return { ...restaurant, images } as RestaurantWithImages;
     });
 
-  } catch (error) {
+  } catch (error: any) {
     console.error("Erro ao carregar dados:", error);
+
+    if (error.message.includes("Erro ao renovar a sessão") ||
+      error.message.includes("Erro ao conectar com o servidor")
+
+    ) {
+      return <TokenExpiredPopup />
+    }
+
     return (
       <div className="flex items-center justify-center h-screen">
         <p className="text-xl text-red-500">

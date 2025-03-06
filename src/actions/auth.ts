@@ -99,18 +99,18 @@ export async function registerAction(data: RegisterData) {
 
 
 export async function refreshTokenAction() {
-  const cookieStore = await cookies()
-  const refreshToken = cookieStore.get('refresh_token')?.value;
+  const cookieStore = await cookies(); 
+  const refreshToken = cookieStore.get("refresh_token")?.value;
 
   if (!refreshToken) {
-    return { success: false, error: 'Nenhum refresh token disponível' };
+    return { success: false, error: "Nenhum refresh token disponível" };
   }
 
   try {
     const response = await fetch(`${authDomain}/auth/api/token/refresh/`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ refresh: refreshToken }),
     });
@@ -122,18 +122,18 @@ export async function refreshTokenAction() {
 
     const data = await response.json();
 
-    // Atualizar o access token no cookie
-    cookieStore.set('access_token', data.access, {
+    // 🔹 Atualizar o cookie corretamente
+    cookieStore.set("access_token", data.access, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: 'strict',
+      sameSite: "strict",
       maxAge: 24 * 60 * 60,
-      path: '/',
+      path: "/",
     });
 
-    return { success: true };
+    return { success: true, token: data.access };
   } catch (error) {
-    return { success: false, error: 'Erro ao conectar com o servidor' };
+    return { success: false, error: "Erro ao conectar com o servidor" };
   }
 }
 

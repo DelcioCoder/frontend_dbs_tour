@@ -29,7 +29,7 @@ async function fetchData<T>(endpoint: string, options: RequestInit = { method: "
       throw new Error(refreshResult.error || "Erro ao renovar a sessão");
     }
 
-    const newToken = (await cookies()).get("access_token")?.value;
+    const newToken = refreshResult.token;
     res = await fetchWithToken(newToken);
   }
 
