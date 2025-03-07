@@ -1,3 +1,5 @@
+import { Evaluation } from "@/types/api";
+
 export function calculateAverageRating(evaluations: Evaluation[]): number {
     if (evaluations.length === 0) return 0;
     
@@ -5,3 +7,5 @@ export function calculateAverageRating(evaluations: Evaluation[]): number {
     
     return total / evaluations.length;
 }
+
+
