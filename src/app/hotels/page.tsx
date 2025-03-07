@@ -5,6 +5,7 @@ import { Pagination } from "@/components/Pagination";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { HotelSchema, ImageSchema } from "../../../schemas";
 import { calculateAverageRating } from "@/utils/ratings";
+import { getCloudinaryName } from "@/utils/env";
 import { PaginatedResponse, Evaluation } from "@/types/api";
 import fetchData from "@/utils/fetchData";
 import { getPageNumberFromUrl } from "@/utils/getPage";
@@ -15,11 +16,7 @@ export default async function HotelsPage({
     searchParams: { page?: string };
 }) {
     const page = searchParams.page || "1";
-    const cloudinaryName = process.env.CLOUDINARY_CLOUD_NAME;
-
-    if (!cloudinaryName) {
-        throw new Error("CLOUDINARY_CLOUD_NAME não está definido.");
-    }
+    const cloudinaryName = getCloudinaryName()
 
     return (
         <Suspense fallback={<LoadingSpinner />}>
@@ -61,7 +58,7 @@ async function HotelsContent({
             );
 
 
-            const averageRating = calculateAverageRating(hotelEvaluations);
+            const averageRating = calculateAverageRating(hotelEvaluations)
 
             return { ...hotel, images, averageRating };
         });
