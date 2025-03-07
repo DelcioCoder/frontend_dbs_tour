@@ -8,6 +8,7 @@ import { calculateAverageRating } from "@/utils/ratings";
 import { PaginatedResponse, Evaluation } from "@/types/api";
 import fetchData from "@/utils/fetchData";
 import { getPageNumberFromUrl } from "@/utils/getPage";
+import { getCloudinaryName } from "@/utils/env";
 
 
 export default async function RestaurantsPage({
@@ -16,11 +17,7 @@ export default async function RestaurantsPage({
   searchParams: { page?: string };
 }) {
   const page = searchParams.page || "1";
-  const cloudinaryName = process.env.CLOUDINARY_CLOUD_NAME;
-
-  if (!cloudinaryName) {
-    throw new Error("CLOUDINARY_CLOUD_NAME não está definido.");
-  }
+  const cloudinaryName = getCloudinaryName()
 
   return (
     <Suspense fallback={<LoadingSpinner />}>

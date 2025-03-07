@@ -8,16 +8,14 @@ import HotelInfo from "@/components/hotelComponents/HotelInfo";
 import ReviewForm from "@/components/shared/ReviewForm";
 import ReviewsList from "@/components/shared/ReviewsList";
 import { notFound } from "next/navigation";
+import { getCloudinaryName } from "@/utils/env";
+
 
 export default async function Page({
     params,
 }: { params: { id: string } }) {
 
-    const cloudinaryName = process.env.CLOUDINARY_CLOUD_NAME;
-
-    if (!cloudinaryName) {
-        throw new Error("CLOUDINARY_CLOUD_NAME não está definido.");
-    }
+    const cloudinaryName = getCloudinaryName();
 
     try {
         const [hotelData, imagesData, evaluationsData, usersData] = await Promise.all([

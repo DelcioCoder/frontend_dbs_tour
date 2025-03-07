@@ -8,7 +8,8 @@ import GastronomyImage from "../../public/gasthronomic.jpg";
 import acommodationImage from "../../public/hospedagem.jpg";
 import cultureImage from "../../public/culture.jpg";
 import belasImage from "../../public/belas.jpg";
-import TokenExpiredPopup from "@/components/TokenExpired";
+import { getCloudinaryName } from "@/utils/env";
+
 // Definição  do novo tipo que inclui a propriedade images
 type RestaurantWithImages = RestaurantType & { images: ImageType[] };
 
@@ -19,10 +20,10 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const cloudinaryName = process.env.CLOUDINARY_CLOUD_NAME;
+  const cloudinaryName = getCloudinaryName();
+
 
   if (!cloudinaryName) {
-    console.error("Erro: CLOUDINARY_CLOUD_NAME não está definido.");
     return (
       <div className="flex items-center justify-center h-screen">
         <p className="text-xl text-red-500">Erro interno. Contate o suporte.</p>
