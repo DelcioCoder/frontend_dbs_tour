@@ -8,6 +8,7 @@ import GastronomyImage from "../../public/gasthronomic.jpg";
 import acommodationImage from "../../public/hospedagem.jpg";
 import cultureImage from "../../public/culture.jpg";
 import belasImage from "../../public/belas.jpg";
+import TokenExpiredPopup from "@/components/TokenExpired";
 import { getCloudinaryName } from "@/utils/env";
 
 // Definição  do novo tipo que inclui a propriedade images
