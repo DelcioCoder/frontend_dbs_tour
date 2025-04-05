@@ -21,7 +21,7 @@ export default async function Page({
         const [hotelData, imagesData, evaluationsData, usersData] = await Promise.all([
             fetchData<HotelType>(`hotels/${params.id}`),
             fetchData<PaginatedResponse<ImageType>>(`images/`),
-            fetchData<PaginatedResponse<Evaluation>>(`evaluations/`),
+            fetchData<PaginatedResponse<Evaluation>>(`evaluations/?content_type=10&object_id=${params.id}`),
             fetchData<PaginatedResponse<User>>(`users/`),
         ])
 

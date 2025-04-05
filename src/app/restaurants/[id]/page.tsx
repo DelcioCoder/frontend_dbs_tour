@@ -22,35 +22,30 @@ export default async function Page({
         const [restaurantData, imagesData, evaluationsData, usersData] = await Promise.all([
             fetchData<RestaurantType>(`restaurants/${params.id}`),
             fetchData<PaginatedResponse<ImageType>>(`images/`),
-            fetchData<PaginatedResponse<Evaluation>>(`evaluations/`),
-            fetchData<PaginatedResponse<User>>(`users/`),
+            fetchData<PaginatedResponse<Evaluation>>(`evaluations/?content_type=12&object_id=${params.id}`),
+            fetchData<PaginatedResponse<User>>(`evaluators/`),
         ]);
 
         if (!restaurantData || !imagesData || !evaluationsData || !usersData) {
             notFound();
         }
-       
+
 
         const validateRestaurant = RestaurantSchema.parse(restaurantData);
         const validateImages = ImageSchema.array().parse(imagesData.results);
         const validateUsers = UserSchema.array().parse(usersData.results);
 
         const restaurantImages = validateImages.filter(
-            (image: ImageType) => 
-            image.object_id === validateRestaurant.id && image.content_type === 12
+            (image: ImageType) =>
+                image.object_id === validateRestaurant.id && image.content_type === 12
         );
 
         const restaurantEvaluations = evaluationsData.results.filter(
-            (evaluation: Evaluation) => 
-            evaluation.object_id === validateRestaurant.id && evaluation.content_type === 12
+            (evaluation: Evaluation) =>
+                evaluation.object_id === validateRestaurant.id && evaluation.content_type === 12
         );
 
-        const evaluationUsers = validateUsers.filter(
-            (user: User) =>
-                restaurantEvaluations.some(
-                    (evaluation: Evaluation) => evaluation.user === user.id
-                )
-            )
+        const evaluationUsers = validateUsers;
 
         const averageRating = calculateAverageRating(restaurantEvaluations);
 
@@ -62,7 +57,10 @@ export default async function Page({
             evaluations: restaurantEvaluations,
         };
 
-        console.log(restaurantWithDetails)
+        console.log("Usuários retornados:", restaurantWithDetails.users);
+        console.log("IDs dos usuários retornados:", restaurantWithDetails.users.map(u => u.id));
+        console.log("IDs dos usuários nas avaliações:", restaurantWithDetails.evaluations.map(e => e.user));
+
 
         return (
             <div className="max-w-7xl mx-auto px-4 py-8">
