@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Menu, X, Search } from "lucide-react";
 import LogoutButton from "../LogoutButton";
 import { usePathname } from "next/navigation";
@@ -10,11 +11,25 @@ import { LogIn } from "lucide-react";
 
 export default function Navbar({ isAuthenticated }: Readonly<{ isAuthenticated: boolean }>) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [params, setParams] = useState("")
   const pathname = usePathname();
+  const router = useRouter();
   const isAuthPage = ["/auth/login", "/auth/register"].includes(pathname);
 
   if (isAuthPage) {
     return null;
+  }
+
+  const handleSubmit = async(event : any): Promise<void> =>{
+    event.preventDefault();
+    if(params !== ""){
+      router.push(`/search?q=${params}`);
+      setParams("")
+      if(menuOpen)
+        setMenuOpen(false)
+    }else{
+      alert("Informe os dados para a pesquisa!")
+    }
   }
 
   return (
@@ -42,20 +57,22 @@ export default function Navbar({ isAuthenticated }: Readonly<{ isAuthenticated: 
 
         {/* Search input */}
         <div className="hidden md:flex items-center w-1/2">
-          <div className="relative w-full">
+          <form className="relative w-full" onSubmit={handleSubmit}>
             <input
               type="text"
               placeholder="Encontre restaurantes, hotéis..."
               className="w-full rounded-lg border border-gray-200 bg-white px-4 py-2 pr-12 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-300"
+              onChange={(e) => setParams(e.target.value)}
+              value={params}
             />
             <button
+              type="submit"
               aria-label="Search"
               className="absolute right-2 top-1/2 -translate-y-1/2 bg-blue-700 text-white px-3 py-1 rounded-md hover:bg-blue-800 focus:outline-none"
-              onClick={() => alert("Buscando...")}
             >
               <Search className="w-5 h-5" />
             </button>
-          </div>
+          </form>
         </div>
 
         {/* Links de Navegação */}
@@ -172,20 +189,22 @@ export default function Navbar({ isAuthenticated }: Readonly<{ isAuthenticated: 
 
 
 
-            <div className="relative w-full">
+            <form className="relative w-full" onSubmit={handleSubmit}>
               <input
                 type="text"
                 placeholder="Pesquisar..."
                 className="w-full rounded-lg border border-gray-200 bg-white px-4 py-2 pr-12 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                onChange={(e) => setParams(e.target.value)}
+                value={params}
               />
               <button
+                type="submit"
                 aria-label="Search"
                 className="absolute right-2 top-1/2 -translate-y-1/2 bg-blue-700 text-white px-3 py-1 rounded-md hover:bg-blue-800 focus:outline-none"
-                onClick={() => alert("Buscando...")}
               >
                 <Search className="w-5 h-5" />
               </button>
-            </div>
+            </form>
           </div>
         </div>
       )}

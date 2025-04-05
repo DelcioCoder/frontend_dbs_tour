@@ -31,7 +31,7 @@ export function HotelCard({ hotel, cloudinaryName }: HotelCardProps) {
                 <p className="text-sm text-gray-600">{hotel.description}</p>
             </div>
 
-            <StarRating rating={hotel.averageRating} />
+            <StarRating rating={hotel.averageRating ?? 0} />
 
             <Link
               href={`/hotels/${hotel.id}`}
