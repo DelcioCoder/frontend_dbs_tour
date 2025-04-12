@@ -1,4 +1,3 @@
-// app/api/search/route.ts
 import  fetchData from '@/utils/fetchData';
 import { NextResponse } from 'next/server';
 import { Evaluation } from '@/types/api';

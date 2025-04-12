@@ -23,6 +23,8 @@ export default function Login() {
       if (result.success) {
         router.push("/");
         router.refresh();
+        const username = formData.get("username")
+        localStorage.setItem("username", username);
       } else if (result.error){
         setError(result.error);
       }

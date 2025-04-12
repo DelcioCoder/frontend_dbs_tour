@@ -1,4 +1,5 @@
 import fetchData from "@/utils/fetchData";
+import { cookies } from "next/headers"
 import { HotelType, ImageType } from "@/types";
 import { HotelSchema, ImageSchema, UserSchema } from "../../../../schemas";
 import { calculateAverageRating } from "@/utils/ratings";
@@ -16,6 +17,7 @@ export default async function Page({
 }: { params: { id: string } }) {
 
     const cloudinaryName = getCloudinaryName();
+    const cookieStore = await cookies();
 
     try {
         const [hotelData, imagesData, evaluationsData, usersData] = await Promise.all([
@@ -30,6 +32,22 @@ export default async function Page({
         }
 
         const validateHotel = HotelSchema.parse(hotelData);
+        cookieStore.set("obj_id", params.id, {
+            httpOnly: false,
+            secure: process.env.NODE_ENV === "production", // false em desenvolvimento
+            sameSite: "strict",
+            maxAge: 24 * 60 * 60, // 1 dia
+             path: "/",
+        });
+
+        cookieStore.set("content_type", "10", {
+            httpOnly: false,
+            secure: process.env.NODE_ENV === "production", // false em desenvolvimento
+            sameSite: "strict",
+            maxAge: 24 * 60 * 60, // 1 dia
+             path: "/",
+        });
+        
         const validateImages = ImageSchema.array().parse(imagesData.results);
         const validateUsers = UserSchema.array().parse(usersData.results);
 
