@@ -29,8 +29,8 @@ export default function ReviewsList({ evaluations, users }: ReviewsListProps) {
                 <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">
                   {user?.username.charAt(0).toUpperCase() || "?"}
                 </div>
-                <div>
-                  <div className="font-semibold">{user ? user.username : "Usuário desconhecido"}</div>
+                <div className="flex flex-col" >
+                  <div className="font-semibold mt-10">{user ? user.username : "Usuário desconhecido"}</div>
                   <StarRating rating={evaluation.stars} />
                 </div>
               </div>

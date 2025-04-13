@@ -12,7 +12,7 @@ import { notFound } from "next/navigation";
 export default async function Page({
     params,
 }: { params: { id: string } }) {
-    const cloudinaryName = process.env.CLOUDINARY_CLOUD_NAME;
+    const cloudinaryName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
 
     if (!cloudinaryName) {
         throw new Error("CLOUDINARY_CLOUD_NAME não está definido.");
@@ -34,6 +34,12 @@ export default async function Page({
         const validateRestaurant = RestaurantSchema.parse(restaurantData);
         const validateImages = ImageSchema.array().parse(imagesData.results);
         const validateUsers = UserSchema.array().parse(usersData.results);
+
+        const data = {
+            "object": params.id,
+            "content": 12,
+            "kind": "restaurants"
+        }
 
         const restaurantImages = validateImages.filter(
             (image: ImageType) => 
@@ -80,7 +86,7 @@ export default async function Page({
                     </h2>
 
                     {/* Review Form */}
-                    <ReviewForm />
+                    <ReviewForm obj={data} />
 
 
 

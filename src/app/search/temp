@@ -1,0 +1,14 @@
+useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`/api/search?q=${query}`);
+        if (!response.ok) {
+          throw new Error(`Erro: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        
+       const validateRestaurants = RestaurantSchema.array().
+
+  if (loading) return <div className="p-4 text-center">{<LoadingSpinner />}</div>;
+  if (error) return <div className="p-4 text-red-500">Erro: {error}</div>;
