@@ -2,6 +2,8 @@ import { RestaurantType, ImageType } from "@/types"
 import { Evaluation } from "@/types/api";
 import MainImage from "../../shared/MainImage";
 import { MapPinned } from "lucide-react";
+import map from "./map.jpg"
+import Image from "next/image";
 
 interface RestaurantHeaderProps {
     restaurant: RestaurantType & {
@@ -35,15 +37,27 @@ export default function RestaurantHeader({
                 )}
             </div>
             {kind === "res" &&(
-                <div> 
-                    <MapPinned /> 
-                    <a href={`https://www.google.com/maps/search/?api=1&query=restaurante ${restaurant.name} luanda`}
-                     target="_blank"
-                     rel="noopener noreferrer"
-                     className="text-blue-600 hover:underline">
-                        Visualizar no Google Maps
-                        </a>
-                </div>
+            <div className="flex justify-center items-center relative overflow-hidden rounded group hover:opacity-90 " >
+                <Image
+                    src={map}
+                    alt="Map default image"
+                    width={4800}
+                    height={3200}
+                    quality={100}
+                    className=" w-full h-full z-0 absolute blur-sm"
+                />
+                
+               
+               
+                <a href={`https://www.google.com/maps/search/?api=1&query=restaurante ${restaurant.name} luanda`}
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 className="list-none text-white z-10 bg-black p-8 rounded flex group-hover:opacity-100 group-hover:scale-110 transition-all duration-300 ease-in-out">
+                    <MapPinned className=" text-white mr-2 group-hover:animate-pulse" />
+                    Visualizar no Mapa
+                </a>
+
+            </div>
             )}
 
             {/* Map Section */}
