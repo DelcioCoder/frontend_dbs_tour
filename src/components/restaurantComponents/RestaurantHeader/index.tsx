@@ -1,6 +1,7 @@
 import { RestaurantType, ImageType } from "@/types"
 import { Evaluation } from "@/types/api";
 import MainImage from "../../shared/MainImage";
+import { MapPinned } from "lucide-react";
 
 interface RestaurantHeaderProps {
     restaurant: RestaurantType & {
@@ -9,11 +10,13 @@ interface RestaurantHeaderProps {
         evaluations: Evaluation[];
     }
     cloudinaryName: string;
+    kind: string;
 }
 
 export default function RestaurantHeader({
     restaurant,
-    cloudinaryName
+    cloudinaryName,
+    kind
 }: RestaurantHeaderProps) {
     return (
         <div className="grid md:grid-cols-3 gap-6 mb-8">
@@ -31,18 +34,29 @@ export default function RestaurantHeader({
                     </div>
                 )}
             </div>
+            {kind === "res" &&(
+                <div> 
+                    <MapPinned /> 
+                    <a href={`https://www.google.com/maps/search/?api=1&query=restaurante ${restaurant.name} luanda`}
+                     target="_blank"
+                     rel="noopener noreferrer"
+                     className="text-blue-600 hover:underline">
+                        Visualizar no Google Maps
+                        </a>
+                </div>
+            )}
 
             {/* Map Section */}
-            <div className="h-96 bg-gray-100 rounded-lg overflow-hidden shadow-lg">
+            {/*<div className="h-96 bg-gray-100 rounded-lg overflow-hidden shadow-lg">
                 <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3942.123456789012!2d13.123456!3d-8.123456!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zM8KwMDcnMzQuNiJTIDEzwrAwNyczNC42IkU!5e0!3m2!1sen!2sao!4v1234567890123!5m2!1sen!2sao"
+                    src="https://www.google.com/maps/place/EPIC+SANA+Luanda+Hotel/@-8.8144567,13.2324588,17z/data=!3m1!5s0x1a51f24e85c92dbb:0x1f4ad89ae3434a12!4m9!3m8!1s0x1a51f24e8277acab:0x8bbb561fd5396f18!5m2!4m1!1i2!8m2!3d-8.8144567!4d13.2350337!16s%2Fg%2F1tdrzlpy?entry=ttu&g_ep=EgoyMDI1MDQwOS4wIKXMDSoASAFQAw%3D%3D"
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}
                     allowFullScreen
                     loading="lazy"
                 />
-            </div>
+            </div>*/}
         </div>
     )
 }

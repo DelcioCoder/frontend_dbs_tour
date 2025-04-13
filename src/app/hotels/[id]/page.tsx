@@ -72,7 +72,7 @@ export default async function Page({
         return (
             <div className="max-w-7xl mx-auto px-4 py-8">
                 {/* Header Section with Image and Map */}
-                <HotelHeader hotel={hotelWithDetails} cloudinaryName={cloudinaryName} />
+                <HotelHeader hotel={hotelWithDetails} kind="hot" cloudinaryName={cloudinaryName} />
 
                 {/* Hotel Info Section */}
                 <HotelInfo hotel={hotelWithDetails} cloudinaryName={cloudinaryName} />

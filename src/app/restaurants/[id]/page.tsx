@@ -73,7 +73,7 @@ export default async function Page({
         return (
             <div className="max-w-7xl mx-auto px-4 py-8">
                 {/* Header Section with Image and Map */}
-                <RestaurantHeader restaurant={restaurantWithDetails} cloudinaryName={cloudinaryName} />
+                <RestaurantHeader restaurant={restaurantWithDetails} kind={"res"} cloudinaryName={cloudinaryName} />
 
                 {/* Restaurant Info Section */}
                 <RestaurantInfo restaurant={restaurantWithDetails} />
