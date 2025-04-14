@@ -17,6 +17,9 @@ async function fetchData<T>(endpoint: string, options: RequestInit = { method: "
         ...(options.headers || {}),
       },
       cache: "no-store",
+      next: {
+        revalidate: 30
+      }
     });
   };
 

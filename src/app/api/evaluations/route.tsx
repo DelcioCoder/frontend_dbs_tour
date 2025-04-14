@@ -28,11 +28,14 @@ export async function POST(request: NextRequest) {
       // Buscar usuários
       console.log("Buscando usuários...");
       const usersResponse = await fetch(`${backDomain}/users/`, {
+        next: {
+          revalidate: 20
+        },
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`
         },
-        cache: "no-store"
+        cache: "force-cache"
       });
   
       if (!usersResponse.ok) {

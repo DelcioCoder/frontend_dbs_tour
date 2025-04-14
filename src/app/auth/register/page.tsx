@@ -52,6 +52,7 @@ export default function Register() {
         });
       } else {
         router.push("/");
+        localStorage.setItem("username", data.username);
       }
     } catch (error) {
       console.error("Erro ao registrar:", error);
