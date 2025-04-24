@@ -16,9 +16,8 @@ async function fetchData<T>(endpoint: string, options: RequestInit = { method: "
         Authorization: token ? `Bearer ${token}` : "",
         ...(options.headers || {}),
       },
-      cache: "no-store",
       next: {
-        revalidate: 30
+        revalidate: 10
       }
     });
   };

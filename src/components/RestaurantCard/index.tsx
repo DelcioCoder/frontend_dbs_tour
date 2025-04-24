@@ -30,7 +30,7 @@ export function RestaurantCard({ restaurant, cloudinaryName }: RestaurantCardPro
             </div>
             <div className="p-4 flex-grow">
                 <h2 className="text-xl font-semibold text-gray-800">{restaurant.name}</h2>
-                <p className="text-sm text-gray-600">{restaurant.description}</p>
+                <p className="text-sm text-justify leading-relaxed text-gray-600">{restaurant.description?.slice(0, 100) + "..."}</p>
             </div>
 
             <StarRating rating={restaurant.averageRating} />

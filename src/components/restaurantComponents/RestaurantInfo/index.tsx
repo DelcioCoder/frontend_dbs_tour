@@ -26,15 +26,15 @@ export default function RestaurantInfo({restaurant}: RestaurantInfoProps) {
             </div>
 
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="flex flex-col gap-4">
                 <div className="flex items-center space-x-3">
-                    <Utensils className="w-5 h-5 text-blue-600" />
-                    <span>{restaurant.description}</span>
+                    <Utensils className="w-8 h-8 text-blue-600 flex-shrink-0" />
+                    <span className=" text-justify leading-relaxed border-l-2 border-blue-600 pl-3 " >{restaurant.description}</span>
                 </div>
 
                 <div className="flex items-center space-x-3">
                     <Clock className="w-5 h-5 text-blue-600" />
-                    <span>Abre às {restaurant.opening_hours}</span>
+                    <span>Abre às: {restaurant.opening_hours}h</span>
                 </div>
             </div>
         </div>
