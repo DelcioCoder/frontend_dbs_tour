@@ -30,15 +30,15 @@ export default function HotelInfo ({
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="flex flex-col gap-4">
                 <div className="flex items-center space-x-3">
-                    <Hotel className="w-5 h-5 text-blue-600" />
-                    <span>{hotel.description}</span>
+                    <Hotel className="w-5 h-5 text-blue-600 flex-shrink-0 " />
+                    <span className="text-justify leading-relaxed border-l-2 border-blue-600 pl-3" >{hotel.description}</span>
                 </div>
 
                 <div className="flex items-center space-x-3">
                     <Clock className="w-5 h-5 text-blue-600" />
-                    <span>Abre às {hotel.opening_hours}</span>
+                    <span>Check-in: {hotel.opening_hours}h</span>
                 </div>
         
             </div>

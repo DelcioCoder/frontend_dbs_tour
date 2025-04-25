@@ -30,6 +30,12 @@ export default async function Page({
         }
 
         const validateHotel = HotelSchema.parse(hotelData);
+        const data = {
+            "object": params.id,
+            "content": 10,
+            "kind": "hotels"
+        }
+
         const validateImages = ImageSchema.array().parse(imagesData.results);
         const validateUsers = UserSchema.array().parse(usersData.results);
 
@@ -66,7 +72,7 @@ export default async function Page({
         return (
             <div className="max-w-7xl mx-auto px-4 py-8">
                 {/* Header Section with Image and Map */}
-                <HotelHeader hotel={hotelWithDetails} cloudinaryName={cloudinaryName} />
+                <HotelHeader hotel={hotelWithDetails} kind="hot" cloudinaryName={cloudinaryName} />
 
                 {/* Hotel Info Section */}
                 <HotelInfo hotel={hotelWithDetails} cloudinaryName={cloudinaryName} />
@@ -78,12 +84,12 @@ export default async function Page({
                     </h2>
 
                     {/* Review Form */}
-                    <ReviewForm />
+                    <ReviewForm obj={data}  /> 
+                </div>
 
                     {/* Reviews List */}
                     <ReviewsList evaluations={hotelWithDetails.evaluations} users={hotelWithDetails.users} />
-                </div>
-            </div>
+             </div>
         )
 
 

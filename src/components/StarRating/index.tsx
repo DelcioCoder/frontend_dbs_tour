@@ -1,18 +1,23 @@
+"use client";
 interface StarRatingProps {
     rating: number;
+    rated?: number;
+    votePage?: number;
+    onRated?: (star: number) => void;
 }
 
 
-export function StarRating({ rating }: StarRatingProps) {
+export function StarRating({ rating, rated=0, onRated, votePage }: StarRatingProps) {
     return (
-        <div className="flex items-center gap-1 p-4"
+        <div className="flex items-center gap-1 p-4" 
             aria-label={`Avaliação média: ${rating.toFixed(1)} estrelas`}>
             {[1, 2, 3, 4, 5].map((star) => (
                 <span
                     key={star}
-                    className={`text-xl ${star <= Math.round(rating) ? "text-yellow-500" : "text-gray-300"
+                    className={`text-xl ${star <= Math.round(rating) ? votePage == 1 ? "text-yellow-500 cursor-pointer": "text-yellow-500" : votePage == 1 ? "text-gray-300 hover:text-yellow-500 cursor-pointer" : "text-gray-300"
                         }`}
                     aria-hidden="true"
+                    onClick={ () => onRated?.(star) }
                 >
                     ★
                 </span>

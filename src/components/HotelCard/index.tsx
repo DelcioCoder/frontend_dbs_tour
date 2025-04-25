@@ -28,7 +28,7 @@ export function HotelCard({ hotel, cloudinaryName }: HotelCardProps) {
             </div>
             <div className="p-4 flex-grow">
                 <h2 className="text-xl font-semibold text-gray-800">{hotel.name}</h2>
-                <p className="text-sm text-gray-600">{hotel.description}</p>
+                <p className="text-sm text-justify leading-relaxed text-gray-600">{hotel.description?.slice(0, 100) + "..."}</p>
             </div>
 
             <StarRating rating={hotel.averageRating ?? 0} />
