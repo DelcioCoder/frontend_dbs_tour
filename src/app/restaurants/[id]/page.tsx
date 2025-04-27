@@ -12,7 +12,7 @@ import { notFound } from "next/navigation";
 export default async function Page({
     params,
 }: { params: { id: string } }) {
-    const cloudinaryName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+    const cloudinaryName = process.env.CLOUDINARY_CLOUD_NAME;
 
     if (!cloudinaryName) {
         throw new Error("CLOUDINARY_CLOUD_NAME não está definido.");
