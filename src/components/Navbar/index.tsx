@@ -48,7 +48,7 @@ export default function Navbar({ isAuthenticated }: Readonly<{ isAuthenticated: 
             </div>
             <div className="flex flex-col">
               <span className="text-xl font-bold tracking-tight bg-gradient-to-r from-white to-yellow-200 bg-clip-text text-transparent">
-                Belas Explorer
+                DBS-TOUR
               </span>
               <span className="text-xs text-gray-400 -mt-1">Descubra Angola</span>
             </div>

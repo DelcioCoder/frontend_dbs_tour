@@ -9,7 +9,7 @@ interface StarRatingProps {
 
 export function StarRating({ rating, rated=0, onRated, votePage }: StarRatingProps) {
     return (
-        <div className="flex items-center gap-1 p-4" 
+        <div className="flex items-center gap-1 p-1" 
             aria-label={`Avaliação média: ${rating.toFixed(1)} estrelas`}>
             {[1, 2, 3, 4, 5].map((star) => (
                 <span

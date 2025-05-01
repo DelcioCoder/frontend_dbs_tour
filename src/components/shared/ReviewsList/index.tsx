@@ -31,7 +31,9 @@ export default function ReviewsList({ evaluations, users }: ReviewsListProps) {
                 </div>
                 <div className="flex flex-col" >
                   <div className="font-semibold mt-10">{user ? user.username : "Usuário desconhecido"}</div>
-                  <StarRating rating={evaluation.stars} />
+                  <div className="" >
+                    <StarRating rating={evaluation.stars} />
+                  </div>
                 </div>
               </div>
               <span className="text-sm text-gray-500">{timeAgo}</span>

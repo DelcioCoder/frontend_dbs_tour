@@ -60,7 +60,7 @@ export default async function Home() {
     console.error("Erro ao carregar dados:", error);
 
     if (error.message.includes("Erro ao renovar a sessão") ||
-      error.message.includes("Erro ao conectar com o servidor")
+      error.message.includes("Erro ao conectar com o servidor") || error.message.includes("Falha ao renovar o token") || error.message.includes("Nenhum refresh token disponível")
 
     ) {
       return <TokenExpiredPopup />
@@ -146,7 +146,7 @@ export default async function Home() {
                 <div className="p-4">
                   <h3 className="text-lg font-bold text-gray-800">{restaurant.name}</h3>
                   <p className="text-sm text-gray-600">
-                    {restaurant.description || "Descrição não disponível"}
+                    {restaurant.description?.slice(0, 100) + "..." || "Descrição não disponível"}
                   </p>
                   <div className="mt-4">
                     {[1, 2, 3, 4, 5].map((star) => (
@@ -164,7 +164,7 @@ export default async function Home() {
           </div>
           <div className="text-center mt-8">
             <Link
-              href="/all-attractions"
+              href="/restaurants"
               className="inline-block px-6 py-3 bg-yellow-500 text-black font-medium rounded-xl hover:bg-yellow-600 shadow-lg transition-colors"
             >
               Ver Mais Locais

@@ -33,7 +33,9 @@ export default function ReviewForm(obj:any) {
           
           const result = await response.json();
           console.log('Sucesso:', result);
-          router.push(`/${obj.obj.kind}/${obj.obj.object}`);
+          setRated(0);
+          setComment("");
+          router.refresh();
     
         } catch (error) {
           console.error('Falha:', error);
@@ -50,6 +52,7 @@ export default function ReviewForm(obj:any) {
                 <textarea className="w-full p-3 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     rows={4}
                     placeholder="Compartilhe a sua experiência..."
+                    value={comment}
                     onChange={(e) =>{setComment(e.target.value)} }
                 />
 
