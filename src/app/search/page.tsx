@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { Suspense } from 'react';
 import { calculateAverageRating } from "@/utils/ratings";
 import { RestaurantSchema, HotelSchema, ImageSchema } from "../../../schemas";
 import { Evaluation } from "@/types/api";
@@ -11,6 +12,7 @@ import { RestaurantType, HotelType, ImageType } from "@/types";
 import { getCloudinaryName } from "@/utils/env";
 
 export default function SearchResults() {
+  console.log("Search a funcionar")
   const searchParams = useSearchParams();
   const query = searchParams.get('q') || '';
   const [hoteis, setHoteis] = useState<HotelType[]>([]);
@@ -80,49 +82,52 @@ export default function SearchResults() {
     fetchData();
   }, [query]);
 
-  if (loading) return <div className="p-4 text-center"><LoadingSpinner /></div>;
-  if (error) return <div className="p-4 text-red-500">Erro: {error}</div>;
+  //if (loading) return <div className="p-4 text-center"><LoadingSpinner /></div>;
+  //if (error) return <div className="p-4 text-red-500">Erro: {error}</div>;
 
+  console.log("A entrar para o suspense")
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Seção de Hotéis */}
-      {hoteis.length > 0 && (
-        <section className="mb-12">
-          <h2 className="text-2xl font-bold mb-6 text-gray-800">Hotéis Encontrados</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {hoteis.map(hotel => (
-              <HotelCard
-                key={hotel.id}
-                hotel={hotel}
-                cloudinaryName={cloudinaryName}
-              />
-            ))}
-          </div>
-        </section>
-      )}
+    <Suspense fallback={<LoadingSpinner />}>
+      <div className="container mx-auto px-4 py-8">
+        {/* Seção de Hotéis */}
+        {hoteis.length > 0 && (
+          <section className="mb-12">
+            <h2 className="text-2xl font-bold mb-6 text-gray-800">Hotéis Encontrados</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {hoteis.map(hotel => (
+                <HotelCard
+                  key={hotel.id}
+                  hotel={hotel}
+                  cloudinaryName={cloudinaryName}
+                />
+              ))}
+            </div>
+          </section>
+        )}
 
-      {/* Seção de Restaurantes */}
-      {restaurantes.length > 0 && (
-        <section>
-          <h2 className="text-2xl font-bold mb-6 text-gray-800">Restaurantes Encontrados</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {restaurantes.map(restaurante => (
-              <RestaurantCard
-                key={restaurante.id}
-                restaurant={restaurante}
-                cloudinaryName={cloudinaryName}
-              />
-            ))}
-          </div>
-        </section>
-      )}
+        {/* Seção de Restaurantes */}
+        {restaurantes.length > 0 && (
+          <section>
+            <h2 className="text-2xl font-bold mb-6 text-gray-800">Restaurantes Encontrados</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {restaurantes.map(restaurante => (
+                <RestaurantCard
+                  key={restaurante.id}
+                  restaurant={restaurante}
+                  cloudinaryName={cloudinaryName}
+                />
+              ))}
+            </div>
+          </section>
+        )}
 
-      {/* Mensagem sem resultados */}
-      {hoteis.length === 0 && restaurantes.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-gray-500 text-lg">Nenhum resultado encontrado para "{query}"</p>
-        </div>
-      )}
-    </div>
+        {/* Mensagem sem resultados */}
+        {hoteis.length === 0 && restaurantes.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-gray-500 text-lg">Nenhum resultado encontrado para "{query}"</p>
+          </div>
+        )}
+      </div>
+    </Suspense>
   );
 }

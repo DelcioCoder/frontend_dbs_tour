@@ -33,47 +33,44 @@ export default async function Home() {
   }
 
   let restaurantsWithImages: RestaurantWithImages[] = [];
+    try {
+      
+      const [restaurantsData, imagesData] = await Promise.all([
+        fetchData<{ results: RestaurantType[] }>("restaurants/"),
+        fetchData<{ results: ImageType[] }>("images/"),
+      ]);
 
-  try {
-    const [restaurantsData, imagesData] = await Promise.all([
-      fetchData<{ results: RestaurantType[] }>("restaurants/"),
-      fetchData<{ results: ImageType[] }>("images/"),
-    ]);
+      if (!restaurantsData || !imagesData) {
+        throw new Error("Erro ao carregar dados");
+      }
 
-    if (!restaurantsData || !imagesData) {
-      throw new Error("Erro ao carregar dados");
+      // Validar os dados dos restaurantes
+      const validateRestaurants = RestaurantSchema.array().parse(restaurantsData.results);
+
+      // Validar os dados das imagens
+      const validateImages = ImageSchema.array().parse(imagesData.results);
+
+      // Relacionar imagens com os restaurantes
+      restaurantsWithImages = validateRestaurants.map((restaurant: RestaurantType) => {
+        const images = validateImages.filter((image: ImageType) => image.object_id === restaurant.id);
+        return { ...restaurant, images } as RestaurantWithImages;
+      });
+
+    } catch (error: any) {
+      console.error("Erro ao carregar dados:", error);
+
+      if (error.message.includes("Erro ao renovar a sessão") || error.message.includes("Erro ao conectar com o servidor") || error.message.includes("Falha ao renovar o token") || error.message.includes("Nenhum refresh token disponível") || error.message.includes("fetch failed")) {
+        return <TokenExpiredPopup />
+      }
+
+      return (
+        <div className="flex items-center justify-center h-screen">
+          <p className="text-xl text-red-500">
+            Ocorreu um erro ao carregar os dados. Por favor, tente novamente mais tarde.
+          </p>
+        </div>
+      );
     }
-
-    // Validar os dados dos restaurantes
-    const validateRestaurants = RestaurantSchema.array().parse(restaurantsData.results);
-
-    // Validar os dados das imagens
-    const validateImages = ImageSchema.array().parse(imagesData.results);
-
-    // Relacionar imagens com os restaurantes
-    restaurantsWithImages = validateRestaurants.map((restaurant: RestaurantType) => {
-      const images = validateImages.filter((image: ImageType) => image.object_id === restaurant.id);
-      return { ...restaurant, images } as RestaurantWithImages;
-    });
-
-  } catch (error: any) {
-    console.error("Erro ao carregar dados:", error);
-
-    if (error.message.includes("Erro ao renovar a sessão") ||
-      error.message.includes("Erro ao conectar com o servidor") || error.message.includes("Falha ao renovar o token") || error.message.includes("Nenhum refresh token disponível")
-
-    ) {
-      return <TokenExpiredPopup />
-    }
-
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <p className="text-xl text-red-500">
-          Ocorreu um erro ao carregar os dados. Por favor, tente novamente mais tarde.
-        </p>
-      </div>
-    );
-  }
 
   return (
     <div className="bg-white">

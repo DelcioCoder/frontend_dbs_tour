@@ -9,10 +9,16 @@ import ReviewForm from "@/components/shared/ReviewForm";
 import ReviewsList from "@/components/shared/ReviewsList";
 import { notFound } from "next/navigation";
 
-export default async function Page({
-    params,
-}: { params: { id: string } }) {
+interface Params {
+    id: string;
+  };
+  
+interface PageProps {
+    params: Promise<any> & Params;
+}
+export default async function Page({params}: PageProps) {
     const cloudinaryName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+    const resolvedParams = await params;
 
     if (!cloudinaryName) {
         throw new Error("CLOUDINARY_CLOUD_NAME não está definido.");
@@ -20,7 +26,7 @@ export default async function Page({
 
     try {
         const [restaurantData, imagesData, evaluationsData, usersData] = await Promise.all([
-            fetchData<RestaurantType>(`restaurants/${params.id}`),
+            fetchData<RestaurantType>(`restaurants/${resolvedParams.id}`),
             fetchData<PaginatedResponse<ImageType>>(`images/`),
             fetchData<PaginatedResponse<Evaluation>>(`evaluations/`),
             fetchData<PaginatedResponse<User>>(`users/`),
@@ -36,7 +42,7 @@ export default async function Page({
         const validateUsers = UserSchema.array().parse(usersData.results);
 
         const data = {
-            "object": params.id,
+            "object": resolvedParams.id,
             "content": 12,
             "kind": "restaurants"
         }

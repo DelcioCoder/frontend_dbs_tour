@@ -5,7 +5,7 @@ import { StarRating } from "../StarRating";
 
 
 interface RestaurantCardProps {
-    restaurant: RestaurantType & { averageRating: number };
+    restaurant: RestaurantType & { averageRating?: number | null };
     cloudinaryName: string;
 }
 
@@ -14,9 +14,9 @@ export function RestaurantCard({ restaurant, cloudinaryName }: RestaurantCardPro
     return (
         <div className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full">
             <div className="relative h-48">
-                {restaurant.images && restaurant.images.length > 0 ? (
+                {restaurant.image? (
                     <Image
-                        src={`https://res.cloudinary.com/${cloudinaryName}/${restaurant.images[0].image}`}
+                        src={`https://res.cloudinary.com/${cloudinaryName}/${restaurant.image[0].image}`}
                         alt={restaurant.name}
                         layout="fill"
                         objectFit="cover"
@@ -33,7 +33,7 @@ export function RestaurantCard({ restaurant, cloudinaryName }: RestaurantCardPro
                 <p className="text-sm text-justify leading-relaxed text-gray-600">{restaurant.description?.slice(0, 100) + "..."}</p>
             </div>
 
-            <StarRating rating={restaurant.averageRating} />
+            <StarRating rating={restaurant.averageRating != null ? restaurant.averageRating: 0} />
 
             <Link
                 href={`/restaurants/${restaurant.id}`}

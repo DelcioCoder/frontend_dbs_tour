@@ -14,7 +14,14 @@ import { getCloudinaryName } from "@/utils/env";
 export default async function RestaurantsPage({
   searchParams,
 }: {
-  searchParams: { page?: string };
+  searchParams: { 
+    page?: string;
+    then: any;
+    catch: any;
+    finally: any;
+
+    [Symbol.toStringTag]: string;
+  };
 }) {
   const page = searchParams.page || "1";
   const cloudinaryName = getCloudinaryName()

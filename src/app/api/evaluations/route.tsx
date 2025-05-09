@@ -20,13 +20,12 @@ export async function POST(request: NextRequest) {
       if (!body.username || !body.obj_id || !body.stars) {
         console.error("Dados incompletos:", body);
         return NextResponse.json(
-          { error: "Dados obrigatórios faltando" },
+          { error: "Dados obrigatórios em falta" },
           { status: 400 }
         );
       }
   
       // Buscar usuários
-      console.log("Buscando usuários...");
       const usersResponse = await fetch(`${backDomain}/users/`, {
         next: {
           revalidate: 20

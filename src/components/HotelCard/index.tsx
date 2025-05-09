@@ -3,8 +3,10 @@ import Link from "next/link";
 import { HotelType } from "@/types";
 import { StarRating } from "../StarRating";
 
+
+
 interface HotelCardProps {
-    hotel: HotelType & { averageRating: number };
+    hotel: HotelType & { averageRating?: number | null };
     cloudinaryName: string;
 }
 
@@ -12,9 +14,9 @@ export function HotelCard({ hotel, cloudinaryName }: HotelCardProps) {
     return (
         <div className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full">
             <div className="relative h-48">
-                {hotel.images && hotel.images.length > 0? (
+                {hotel.image? (
                     <Image
-                        src={`https://res.cloudinary.com/${cloudinaryName}/${hotel.images[0].image}`}
+                        src={`https://res.cloudinary.com/${cloudinaryName}/${hotel.image[0].image}`}
                         alt={hotel.name}
                         layout="fill"
                         objectFit="cover"

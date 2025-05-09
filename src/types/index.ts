@@ -2,7 +2,7 @@ export type EstablishmentType = {
     id: number;
     name: string;
     description: string | null; // Aligned with RestaurantSchema
-    image?: ImageType | null;
+    image?: ImageType[] | null;
     rating?: number | null;
     latitude?: number | null;
     longitude?: number | null;
@@ -12,6 +12,7 @@ export type EstablishmentType = {
     date_added: string;
     category: number;
     centrality: number;
+    //averageRating: number | null;
   };
 
 export type HotelType = EstablishmentType;

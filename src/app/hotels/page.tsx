@@ -13,9 +13,16 @@ import { getPageNumberFromUrl } from "@/utils/getPage";
 export default async function HotelsPage({
     searchParams,
 }: {
-    searchParams: { page?: string };
+    searchParams: { 
+        page?: string;
+        then: any;
+        catch: any;
+        finally: any;
+
+        [Symbol.toStringTag]: string;
+    };
 }) {
-    const page = searchParams.page || "1";
+    const page = searchParams.page || '1';
     const cloudinaryName = getCloudinaryName()
 
     return (
@@ -45,6 +52,7 @@ async function HotelsContent({
         }
 
         const validateHotels = HotelSchema.array().parse(hotelsResponse.results);
+        console.log(validateHotels)
         const validateImages = ImageSchema.array().parse(imagesData.results);
 
         const hotelsWithImages = validateHotels.map((hotel: HotelType) => {

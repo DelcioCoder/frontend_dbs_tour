@@ -10,17 +10,21 @@ import ReviewForm from "@/components/shared/ReviewForm";
 import ReviewsList from "@/components/shared/ReviewsList";
 import { getCloudinaryName } from "@/utils/env";
 
-type PageProps = {
-  params: {
-    id: string;
-  };
+
+interface Params {
+  id: string;
 };
+
+interface PageProps {
+  params: Promise<any> & Params;
+}
 
 export default async function Page({ params }: PageProps) {
   const cloudinaryName = getCloudinaryName();
+  const resolvedParams = await params;
 
   const [hotelData, imagesData, evaluationsData, usersData] = await Promise.all([
-    fetchData<HotelType>(`hotels/${params.id}`),
+    fetchData<HotelType>(`hotels/${resolvedParams.id}`),
     fetchData<PaginatedResponse<ImageType>>(`images/`),
     fetchData<PaginatedResponse<Evaluation>>(`evaluations/`),
     fetchData<PaginatedResponse<User>>(`users/`),
@@ -32,7 +36,7 @@ export default async function Page({ params }: PageProps) {
 
   const validateHotel = HotelSchema.parse(hotelData);
   const data = {
-    object: params.id,
+    object: resolvedParams.id,
     content: 10,
     kind: "hotels",
   };

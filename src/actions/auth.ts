@@ -12,6 +12,7 @@ export async function loginAction(formData: FormData) {
   try {
     const response = await fetch(`${authDomain}/auth/api/token/`, {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -29,7 +30,7 @@ export async function loginAction(formData: FormData) {
     cookieStore.set("access_token", data.access, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // false em desenvolvimento
-      sameSite: "strict",
+      sameSite: "none",
       maxAge: 24 * 60 * 60, // 1 dia
       path: "/",
     });
@@ -37,7 +38,7 @@ export async function loginAction(formData: FormData) {
     cookieStore.set("refresh_token", data.refresh, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // false em desenvolvimento
-      sameSite: "strict",
+      sameSite: "none",
       maxAge: 7 * 24 * 60 * 60, // 7 dias
       path: "/",
     });
@@ -61,6 +62,7 @@ export async function registerAction(data: RegisterData) {
   try {
     const response = await fetch(`${authDomain}/auth/api/register/`, {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -77,7 +79,7 @@ export async function registerAction(data: RegisterData) {
     cookieStore.set("access_token", dataResponse.access, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: "none",
       maxAge: 24 * 60 * 60,
       path: "/",
     });
@@ -85,7 +87,7 @@ export async function registerAction(data: RegisterData) {
     cookieStore.set("refresh_token", dataResponse.refresh, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: "none",
       maxAge: 7 * 24 * 60 * 60,
       path: "/",
     });
@@ -109,6 +111,7 @@ export async function refreshTokenAction() {
   try {
     const response = await fetch(`${authDomain}/auth/api/token/refresh/`, {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -126,7 +129,7 @@ export async function refreshTokenAction() {
     cookieStore.set("access_token", data.access, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: "none",
       maxAge: 24 * 60 * 60,
       path: "/",
     });
